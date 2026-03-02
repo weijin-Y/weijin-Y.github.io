@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AE-POWER | 新能源智能网联汽车动力系统团队</title>
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- FontAwesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- 引入极简高级感字体 -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&family=Noto+Sans+SC:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --xm-black: #000000;
+            --xm-dark-1: #0A0A0A;
+            --xm-dark-2: #141414;
+            --xm-gray-text: #86868b;
+            --xm-white: #f5f5f7;
+            --xm-accent: #e5e5e5;
+            --xm-border: rgba(255, 255, 255, 0.08);
+        }
+
+        body {
+            font-family: 'Inter', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--xm-black);
+            color: var(--xm-white);
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        /* 隐藏滚动条，保持极致沉浸感 */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: var(--xm-black); }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #555; }
+
+        /* --- 极简导航栏 --- */
+        .navbar {
+            background: rgba(0, 0, 0, 0.6) !important;
+            backdrop-filter: saturate(180%) blur(20px);
+            -webkit-backdrop-filter: saturate(180%) blur(20px);
+            border-bottom: 1px solid rgba(255,255,255,0.05);
+            padding: 15px 0;
+            transition: all 0.3s ease;
+        }
+        .navbar-brand {
+            font-weight: 800;
+            font-size: 1.2rem;
+            letter-spacing: 1px;
+            color: #fff !important;
+        }
+        .nav-link {
+            color: var(--xm-gray-text) !important;
+            font-size: 0.85rem;
+            margin: 0 10px;
+            transition: color 0.3s;
+        }
+        .nav-link:hover { color: #fff !important; }
+
+        /* --- 滚动浮现动画 (JS配合) --- */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* --- 电影级首页：汽车疾驰视效 --- */
+        .hero-section {
+            position: relative;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            padding-top: 15vh;
+            overflow: hidden;
+            background-color: #000;
+        }
+        /* 高清暗黑跑车背景图 */
+        .hero-bg {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            /* 使用一张极具质感的暗黑汽车前脸/侧影图 */
+            background: url('https://images.unsplash.com/photo-1617531653332-bd46c24f2068?q=80&w=2000&auto=format&fit=crop') center/cover no-repeat;
+            opacity: 0.6;
+            z-index: 0;
+            /* 缓慢推进动画，增加动态压迫感 */
+            animation: kenBurns 20s ease-out forwards;
+        }
+        @keyframes kenBurns {
+            0% { transform: scale(1); }
+            100% { transform: scale(1.1); }
+        }
+        /* 疾驰流光效果 (模拟路灯或隧道光飞速向后退) */
+        .speed-lines {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 1;
+            background: 
+                linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.03) 50%, transparent 100%);
+            background-size: 200% 100%;
+            animation: speedLight 1.5s infinite linear;
+            pointer-events: none;
+        }
+        @keyframes speedLight {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+        /* 底部黑色渐变过渡到下一屏 */
+        .hero-gradient {
+            position: absolute;
+            bottom: 0; left: 0; width: 100%; height: 50%;
+            background: linear-gradient(to top, var(--xm-black), transparent);
+            z-index: 2;
+        }
+
+        /* 首页文案排版 (类似小米SU7官网居中极简大字) */
+        .hero-content {
+            position: relative;
+            z-index: 10;
+            text-align: center;
+        }
+        .hero-title {
+            font-size: 4.5rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            color: #fff;
+            text-shadow: 0 4px 20px rgba(0,0,0,0.8);
+        }
+        .hero-subtitle {
+            font-size: 1.5rem;
+            font-weight: 300;
+            color: var(--xm-accent);
+            letter-spacing: 5px;
+            margin-bottom: 40px;
+        }
+        
+        /* 数据统计 - 极简风 */
+        .stats-row {
+            position: absolute;
+            bottom: 8vh;
+            left: 0; width: 100%;
+            z-index: 10;
+        }
+        .stat-item {
+            text-align: center;
+            border-right: 1px solid var(--xm-border);
+        }
+        .stat-item:last-child { border-right: none; }
+        .stat-num {
+            font-size: 3rem;
+            font-weight: 300;
+            font-family: 'Inter', sans-serif;
+            color: #fff;
+            line-height: 1;
+            margin-bottom: 5px;
+        }
+        .stat-desc {
+            font-size: 0.8rem;
+            color: var(--xm-gray-text);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* --- 极简高级卡片 (类似小米/Apple产品展示面板) --- */
+        .section-padding { padding: 120px 0; }
+        .bg-dark-1 { background-color: var(--xm-dark-1); }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 80px;
+        }
+        .section-header h2 {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 15px;
+        }
+        .section-header p {
+            font-size: 1.1rem;
+            color: var(--xm-gray-text);
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .xm-card {
+            background-color: var(--xm-dark-2);
+            border-radius: 24px;
+            padding: 40px;
+            height: 100%;
+            transition: transform 0.4s ease, background-color 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .xm-card:hover {
+            transform: translateY(-5px);
+            background-color: #1a1a1a;
+        }
+
+        /* --- PPT 图片高级展示区 --- */
+        .ppt-img-container {
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+            background: #000;
+            margin-bottom: 30px;
+            aspect-ratio: 16/9; /* 保证图片比例统一 */
+        }
+        .ppt-img-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.8;
+            transition: opacity 0.5s, transform 3s ease;
+        }
+        .xm-card:hover .ppt-img-container img {
+            opacity: 1;
+            transform: scale(1.03);
+        }
+        .ppt-tag {
+            position: absolute;
+            top: 15px; left: 15px;
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(10px);
+            color: #fff;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            letter-spacing: 1px;
+            z-index: 2;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        /* 团队列表极简排版 */
+        .team-list { margin-top: 20px; }
+        .team-list-item {
+            padding: 15px 0;
+            border-bottom: 1px solid var(--xm-border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .team-list-item:last-child { border-bottom: none; }
+        .team-name { font-size: 1.1rem; font-weight: 600; color: #fff; }
+        .team-title { font-size: 0.85rem; color: var(--xm-gray-text); }
+
+        /* 尾部 */
+        footer {
+            padding: 60px 0;
+            border-top: 1px solid var(--xm-border);
+            background-color: var(--xm-black);
+            color: var(--xm-gray-text);
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 极简毛玻璃导航 -->
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <a class="navbar-brand" href="#">AE-POWER</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <i class="fas fa-bars text-white"></i>
+            </button>
+            <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link" href="#home">概览</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#team">研发团队</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#research">核心技术</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#labs">超级实验舱</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#coop">生态合作</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 首页：电影级车辆疾驰视效 -->
+    <section id="home" class="hero-section">
+        <div class="hero-bg"></div>
+        <div class="speed-lines"></div> <!-- 疾驰流光 -->
+        <div class="hero-gradient"></div> <!-- 底部平滑过渡 -->
+
+        <div class="container hero-content reveal">
+            <h1 class="hero-title">智驭未来</h1>
+            <p class="hero-subtitle">新能源智能网联汽车动力系统设计与测控团队</p>
+            <p class="text-white-50 mx-auto" style="max-width: 600px; font-weight: 300;">
+                依托湖北文理学院 汽车与交通工程学院。<br>聚焦动力系统优化、环境感知、决策预判及底层架构控制关键技术。
+            </p>
+        </div>
+
+        <div class="stats-row reveal" style="transition-delay: 0.3s;">
+            <div class="container">
+                <div class="row">
+                    <div class="col-md-3 col-6 stat-item">
+                        <div class="stat-num">140<span style="font-size:1.5rem;">W+</span></div>
+                        <div class="stat-desc">科研经费总额</div>
+                    </div>
+                    <div class="col-md-3 col-6 stat-item">
+                        <div class="stat-num">47</div>
+                        <div class="stat-desc">核心学术论文</div>
+                    </div>
+                    <div class="col-md-3 col-6 stat-item">
+                        <div class="stat-num">42</div>
+                        <div class="stat-desc">国家发明专利及软著</div>
+                    </div>
+                    <div class="col-md-3 col-6 stat-item">
+                        <div class="stat-num">3.63<span style="font-size:1.5rem;">亿</span></div>
+                        <div class="stat-desc">研发驱动经济效益</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 团队介绍：极简高级排版 -->
+    <section id="team" class="section-padding bg-dark-1">
+        <div class="container">
+            <div class="section-header reveal">
+                <h2>全栈核心研发大脑</h2>
+                <p>由顶尖院校博士及行业资深专家领衔，打造跨学科联合攻关铁军。</p>
+            </div>
+            
+            <div class="row g-4">
+                <!-- 领军人物 -->
+                <div class="col-lg-5 reveal">
+                    <div class="xm-card p-0 h-100 d-flex flex-column">
+                        <div class="ppt-img-container m-0" style="flex-grow: 1; border-radius: 24px 24px 0 0;">
+                            <span class="ppt-tag">PPT [Image 8] 石大排教授</span>
+                            <img src="https://images.unsplash.com/photo-1556761175-5973dc0f32d7?auto=format&fit=crop&w=800&q=80" alt="Leader">
+                        </div>
+                        <div class="p-4 p-md-5">
+                            <h3 class="fw-bold text-white mb-2">石大排 <span class="fs-6 text-muted ms-2">博士 / 教授</span></h3>
+                            <p class="text-muted small mb-4">吉林大学 车辆工程工学博士 | 上海交通大学 博士后</p>
+                            <p class="text-white-50 mb-0" style="font-size: 0.95rem; line-height: 1.7;">
+                                主攻新能源汽车动力系统开发、智能网联汽车决策与执行控制技术，以及动力电池 SOC/SOH 高精度预估模型构建。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 骨干矩阵 -->
+                <div class="col-lg-7 reveal" style="transition-delay: 0.2s;">
+                    <div class="xm-card d-flex flex-column justify-content-center">
+                        <h4 class="text-white fw-bold mb-4">专家矩阵</h4>
+                        <div class="ppt-img-container" style="aspect-ratio: 21/9;">
+                            <span class="ppt-tag">PPT [Image 1-7] 团队实景</span>
+                            <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=1000&q=80" alt="Team">
+                        </div>
+                        <div class="team-list">
+                            <div class="team-list-item">
+                                <span class="team-name">汪云 <span class="badge bg-secondary ms-2 fw-light">教授</span></span>
+                                <span class="team-title text-end">新能源动力测试与控制</span>
+                            </div>
+                            <div class="team-list-item">
+                                <span class="team-name">马强 <span class="badge bg-secondary ms-2 fw-light">副教授</span></span>
+                                <span class="team-title text-end">电动车驱动电机控制</span>
+                            </div>
+                            <div class="team-list-item">
+                                <span class="team-name">贾巍 <span class="badge bg-secondary ms-2 fw-light">副教授</span></span>
+                                <span class="team-title text-end">底层平台操作系统研发</span>
+                            </div>
+                            <div class="team-list-item">
+                                <span class="team-name">刘静 <span class="badge bg-secondary ms-2 fw-light">副教授 / 系主任</span></span>
+                                <span class="team-title text-end">道路预测与虚拟仿真系统</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 核心技术架构 -->
+    <section id="research" class="section-padding">
+        <div class="container">
+            <div class="section-header reveal">
+                <h2>三大核心技术架构</h2>
+                <p>自研底层算法，赋能智能汽车全生命周期管理与自动驾驶决策。</p>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-md-4 reveal">
+                    <div class="xm-card text-center">
+                        <i class="fas fa-microchip fa-3x mb-4 text-white"></i>
+                        <h4 class="text-white fw-bold mb-3">动力电池技术攻关</h4>
+                        <p class="text-white-50 small mb-0" style="line-height: 1.8;">
+                            依托湖北隆中实验室，融合电化学材料特性，开展基于锂离子浓度分布的新型动力锂离子电池健康状态评估与安全预警关键技术研究。
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-4 reveal" style="transition-delay: 0.1s;">
+                    <div class="xm-card text-center">
+                        <i class="fas fa-satellite-dish fa-3x mb-4 text-white"></i>
+                        <h4 class="text-white fw-bold mb-3">智能网联底座</h4>
+                        <p class="text-white-50 small mb-0" style="line-height: 1.8;">
+                            深度研发环境感知信息融合(雷达与摄像头)、整车智能决策规划、车辆底层控制技术。应用于低速无人车与智慧交通协同系统。
+                        </p>
+                    </div>
+                </div>
+                <div class="col-md-4 reveal" style="transition-delay: 0.2s;">
+                    <div class="xm-card text-center">
+                        <i class="fas fa-cogs fa-3x mb-4 text-white"></i>
+                        <h4 class="text-white fw-bold mb-3">动力系统智能优化</h4>
+                        <p class="text-white-50 small mb-0" style="line-height: 1.8;">
+                            开展动力电池电量智能规划技术、自适应能量控制策略、行驶信息智能识别与预测技术的研发，实现整车能耗极致优化。
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 超级实验舱 (PPT 大图展示区) -->
+    <section id="labs" class="section-padding bg-dark-1">
+        <div class="container">
+            <div class="section-header reveal">
+                <h2>超级仿真与实车测试舱</h2>
+                <p>软硬协同，构建行业领先的多物理场、全场景验证平台。</p>
+            </div>
+
+            <div class="row g-4">
+                <div class="col-lg-12 reveal">
+                    <!-- 首个大横幅卡片 -->
+                    <div class="xm-card row g-0 p-0 overflow-hidden align-items-center">
+                        <div class="col-md-7">
+                            <div class="ppt-img-container m-0" style="border-radius: 0; aspect-ratio: 16/10;">
+                                <span class="ppt-tag">PPT 无人底盘实拍</span>
+                                <img src="https://images.unsplash.com/photo-1620021603598-65ec4d17f417?auto=format&fit=crop&w=1200&q=80" alt="Auto">
+                            </div>
+                        </div>
+                        <div class="col-md-5 p-5">
+                            <h3 class="text-white fw-bold mb-3">智能驾驶实车验证平台</h3>
+                            <p class="text-white-50 mb-0" style="line-height: 1.8;">
+                                配备高拟真汽车驾驶模拟器、精密数据采集终端。同时搭载了激光雷达、双目摄像头及全套传感器矩阵的线控底盘无人实车，支持 L4 级以上自动驾驶算法落地验证。
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6 reveal">
+                    <div class="xm-card p-4">
+                        <div class="ppt-img-container">
+                            <span class="ppt-tag">PPT 混合动力测功机</span>
+                            <img src="https://images.unsplash.com/photo-1580901368919-7738efb02e75?auto=format&fit=crop&w=800&q=80" alt="Motor">
+                        </div>
+                        <h4 class="text-white fw-bold">双电机 PHEV 测试台架</h4>
+                        <p class="text-white-50 small mb-0 mt-2">同轴并联架构，包含自主研发的上位机控制系统及高压控制柜，可精确模拟电动机、发电机各类复杂耦合工况。</p>
+                    </div>
+                </div>
+                <div class="col-md-6 reveal" style="transition-delay: 0.2s;">
+                    <div class="xm-card p-4">
+                        <div class="ppt-img-container">
+                            <span class="ppt-tag">PPT [Image 70] ARBIN台架</span>
+                            <img src="https://images.unsplash.com/photo-1581092334651-ddf26d9a09d0?auto=format&fit=crop&w=800&q=80" alt="Battery">
+                        </div>
+                        <h4 class="text-white fw-bold">动力电池全生命周期实验室</h4>
+                        <p class="text-white-50 small mb-0 mt-2">引入美国顶级 ARBIN (EVTS) 电池测试系统与高低温环境箱，开展从电芯到模组的极限应力与老化机理测试。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 生态合作 -->
+    <section id="coop" class="section-padding" style="background: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=2000&q=80') center/cover no-repeat; background-attachment: fixed; position: relative;">
+        <!-- 深色遮罩 -->
+        <div style="position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.85);"></div>
+        
+        <div class="container position-relative z-index-1 reveal">
+            <div class="section-header">
+                <h2>开放共赢的产学研生态</h2>
+                <p>技术赋能产业，产出直接经济效益超 3.63 亿元。</p>
+            </div>
+            
+            <div class="row text-center g-4 justify-content-center">
+                <div class="col-md-3 col-6">
+                    <div class="p-4 border rounded-4 border-secondary backdrop-blur" style="background: rgba(255,255,255,0.03);">
+                        <i class="fas fa-truck-loading fa-2x mb-3 text-white"></i>
+                        <h6 class="text-white">智慧城市物流</h6>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="p-4 border rounded-4 border-secondary backdrop-blur" style="background: rgba(255,255,255,0.03);">
+                        <i class="fas fa-bus-alt fa-2x mb-3 text-white"></i>
+                        <h6 class="text-white">无人巴士示范区</h6>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="p-4 border rounded-4 border-secondary backdrop-blur" style="background: rgba(255,255,255,0.03);">
+                        <i class="fas fa-tractor fa-2x mb-3 text-white"></i>
+                        <h6 class="text-white">农业特种运输</h6>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="p-4 border rounded-4 border-secondary backdrop-blur" style="background: rgba(255,255,255,0.03);">
+                        <i class="fas fa-helicopter fa-2x mb-3 text-white"></i>
+                        <h6 class="text-white">低空经济与无人机</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 极简页脚 -->
+    <footer class="text-center">
+        <div class="container">
+            <p class="mb-2 text-white">AE-POWER 动力系统设计与测控团队</p>
+            <p class="mb-0 text-white-50">湖北文理学院 汽车与交通工程学院 &copy; 2026 鄂ICP备XXXXXXXX号</p>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- 滚动浮现动效脚本 -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 导航栏背景渐变控制
+            const navbar = document.querySelector('.navbar');
+            window.addEventListener('scroll', () => {
+                if (window.scrollY > 50) {
+                    navbar.style.background = 'rgba(0, 0, 0, 0.85)';
+                    navbar.style.borderBottom = '1px solid rgba(255,255,255,0.1)';
+                } else {
+                    navbar.style.background = 'rgba(0, 0, 0, 0.4)';
+                    navbar.style.borderBottom = '1px solid rgba(255,255,255,0.05)';
+                }
+            });
+
+            // Intersection Observer 实现滚动丝滑浮现效果
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px',
+                threshold: 0.15 // 元素露出 15% 时触发
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                        observer.unobserve(entry.target); // 动画执行一次后取消监听
+                    }
+                });
+            }, observerOptions);
+
+            // 获取所有带有 .reveal 类的元素并加入观察列队
+            const revealElements = document.querySelectorAll('.reveal');
+            revealElements.forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+</html>
