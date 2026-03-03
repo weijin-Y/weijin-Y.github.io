@@ -13,14 +13,20 @@
 
     <style>
         :root {
-            --xm-black: #000000;
-            --xm-dark-1: #0A0A0A;
-            --xm-dark-2: #141414;
+            /* 优化为更高级的深灰黑色系 */
+            --xm-black: #050505;
+            --xm-dark-1: #0f0f0f;
+            --xm-dark-2: #161617;
             --xm-gray-text: #86868b;
             --xm-white: #f5f5f7;
-            --xm-accent: #e5e5e5;
+            --xm-accent: #d2d2d7;
             --xm-border: rgba(255, 255, 255, 0.08);
-            --xm-highlight: #2997ff; 
+            --xm-highlight: #0071e3; /* 纯正科技蓝 */
+            --transition-smooth: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        html {
+            scroll-behavior: smooth;
         }
 
         body {
@@ -29,6 +35,7 @@
             color: var(--xm-white);
             -webkit-font-smoothing: antialiased;
             overflow-x: hidden;
+            letter-spacing: -0.01em; /* 现代 UI 微缩字间距 */
         }
 
         /* 自定义滚动条 */
@@ -39,7 +46,7 @@
 
         /* --- 极简毛玻璃导航栏 --- */
         .navbar {
-            background: rgba(0, 0, 0, 0.6) !important;
+            background: rgba(5, 5, 5, 0.6) !important;
             backdrop-filter: saturate(180%) blur(20px);
             -webkit-backdrop-filter: saturate(180%) blur(20px);
             border-bottom: 1px solid rgba(255,255,255,0.05);
@@ -48,27 +55,35 @@
         }
         .navbar-brand { font-weight: 800; font-size: 1.2rem; letter-spacing: 1px; color: #fff !important; }
         .nav-link { color: var(--xm-gray-text) !important; font-size: 0.9rem; margin: 0 10px; transition: color 0.3s; font-weight: 500;}
-        .nav-link:hover { color: #fff !important; }
+        .nav-link:hover, .nav-link.active-link { color: #fff !important; }
 
         /* --- 滚动浮现动画 --- */
-        .reveal { opacity: 0; transform: translateY(40px); transition: all 0.8s cubic-bezier(0.5, 0, 0, 1); }
+        .reveal { opacity: 0; transform: translateY(40px); transition: var(--transition-smooth); }
         .reveal.active { opacity: 1; transform: translateY(0); }
 
         /* --- 首页 --- */
         .hero-section {
             position: relative; height: 100vh; display: flex; flex-direction: column;
-            justify-content: center; overflow: hidden; background-color: #000;
+            justify-content: center; overflow: hidden; background-color: var(--xm-black);
         }
         .hero-bg {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             background: url('https://images.unsplash.com/photo-1617531653332-bd46c24f2068?q=80&w=2000&auto=format&fit=crop') center/cover no-repeat;
-            opacity: 0.5; z-index: 0; animation: kenBurns 20s ease-out forwards;
+            opacity: 0.4; z-index: 0; animation: kenBurns 20s ease-out forwards;
         }
         @keyframes kenBurns { 0% { transform: scale(1); } 100% { transform: scale(1.1); } }
         
+        /* 科技感光晕底衬 */
+        .hero-glow {
+            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+            width: 70vw; height: 70vw; border-radius: 50%;
+            background: radial-gradient(circle, rgba(0, 113, 227, 0.15) 0%, transparent 60%);
+            z-index: 1; pointer-events: none; filter: blur(50px);
+        }
+
         .speed-lines {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 1;
-            background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.03) 50%, transparent 100%);
+            background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.02) 50%, transparent 100%);
             background-size: 200% 100%; animation: speedLight 1.5s infinite linear; pointer-events: none;
         }
         @keyframes speedLight { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
@@ -85,11 +100,11 @@
         .stats-row { position: absolute; bottom: 5vh; left: 0; width: 100%; z-index: 10; }
         .stat-item { text-align: center; border-right: 1px solid var(--xm-border); }
         .stat-item:last-child { border-right: none; }
-        .stat-num { font-size: 2.5rem; font-weight: 300; font-family: 'Inter', sans-serif; color: #fff; line-height: 1.2; margin-bottom: 5px; }
+        .stat-num { font-size: 2.8rem; font-weight: 300; font-family: 'Inter', sans-serif; color: #fff; line-height: 1.2; margin-bottom: 5px; }
         .stat-desc { font-size: 0.85rem; color: var(--xm-gray-text); text-transform: uppercase; letter-spacing: 1px; }
 
         /* --- 通用区块排版 --- */
-        .section-padding { padding: 120px 0; }
+        .section-padding { padding: 120px 0; position: relative; }
         .bg-dark-1 { background-color: var(--xm-dark-1); }
         .section-header { text-align: center; margin-bottom: 80px; }
         .section-header h2 { font-size: 3rem; font-weight: 800; color: #fff; margin-bottom: 15px; letter-spacing: 1px;}
@@ -98,19 +113,24 @@
         /* --- 极简高级卡片 --- */
         .xm-card {
             background-color: var(--xm-dark-2); border-radius: 24px; padding: 40px; height: 100%;
-            transition: transform 0.4s ease, background-color 0.4s ease; position: relative; overflow: hidden;
+            transition: var(--transition-smooth); position: relative; overflow: hidden;
             border: 1px solid rgba(255,255,255,0.03);
         }
-        .xm-card:hover { transform: translateY(-5px); background-color: #1a1a1a; border-color: rgba(255,255,255,0.08); box-shadow: 0 20px 40px rgba(0,0,0,0.5);}
+        .xm-card:hover { 
+            transform: translateY(-8px); 
+            background-color: #1a1a1a; 
+            border-color: rgba(0, 113, 227, 0.3); /* 悬停时科技蓝边框亮起 */
+            box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+        }
 
         /* 图像处理 (暗房滤镜) */
         .ppt-img-container {
-            border-radius: 16px; overflow: hidden; position: relative; background: #000; margin-bottom: 30px;
+            border-radius: 16px; overflow: hidden; position: relative; background: #111; margin-bottom: 30px;
             aspect-ratio: 16/9; border: 1px solid rgba(255,255,255,0.05);
         }
         .ppt-img-container img { 
             width: 100%; height: 100%; object-fit: cover; 
-            filter: grayscale(20%) brightness(0.7);
+            filter: grayscale(20%) brightness(0.8);
             transition: all 0.6s cubic-bezier(0.25, 1, 0.5, 1); 
         }
         .xm-card:hover .ppt-img-container img, .ppt-img-container:hover img { 
@@ -127,29 +147,46 @@
         .feature-text { padding: 0 50px; }
         .feature-title { font-size: 2.2rem; font-weight: 700; margin-bottom: 20px; color: #fff; }
         .feature-desc { font-size: 1.05rem; color: var(--xm-gray-text); line-height: 1.8; margin-bottom: 20px; }
-        .feature-author { font-size: 0.85rem; color: var(--xm-highlight); border: 1px solid rgba(41,151,255,0.3); background: rgba(41,151,255,0.1); padding: 6px 15px; border-radius: 20px; display: inline-block;}
+        .feature-author { font-size: 0.85rem; color: var(--xm-highlight); border: 1px solid rgba(0,113,227,0.3); background: rgba(0,113,227,0.1); padding: 6px 15px; border-radius: 20px; display: inline-block;}
 
-        /* 团队列表 */
-        .team-list-item { padding: 18px 0; border-bottom: 1px solid var(--xm-border); display: flex; align-items: center; justify-content: space-between; transition: 0.3s; }
-        .team-list-item:hover { background: rgba(255,255,255,0.02); padding-left: 10px; border-radius: 8px;}
-        .team-list-item:last-child { border-bottom: none; }
-        .team-name { font-size: 1.1rem; font-weight: 600; color: #fff; min-width: 130px;}
-        .team-title { font-size: 0.95rem; color: var(--xm-gray-text); text-align: right; flex-grow: 1; line-height: 1.5;}
+        /* 专家指导卡片网格 (极致极简风格) */
+        .expert-box {
+            background: transparent; border: 1px solid rgba(255,255,255,0.04); border-radius: 16px;
+            padding: 24px; transition: var(--transition-smooth); height: 100%; display: flex; flex-direction: column;
+            position: relative; overflow: hidden;
+        }
+        .expert-box::before {
+            content: ''; position: absolute; left: 0; top: 0; width: 3px; height: 100%;
+            background: var(--xm-highlight); transform: scaleY(0); transform-origin: top; transition: transform 0.4s ease;
+        }
+        .expert-box:hover {
+            background: rgba(255,255,255,0.02); border-color: rgba(255,255,255,0.1); transform: translateY(-4px);
+        }
+        .expert-box:hover::before { transform: scaleY(1); }
+        .expert-avatar { width: 54px; height: 54px; border-radius: 50%; object-fit: cover; border: 1px solid rgba(255,255,255,0.1); }
+        .expert-name { font-size: 1.15rem; font-weight: 700; color: #fff; margin-bottom: 2px; letter-spacing: 0.5px; }
+        .expert-title { font-size: 0.75rem; color: var(--xm-highlight); text-transform: uppercase; letter-spacing: 1px; }
+        .expert-desc { font-size: 0.85rem; color: var(--xm-gray-text); line-height: 1.6; margin-bottom: 0; }
 
         /* 研究生卡片 */
         .pg-card {
-            background: linear-gradient(145deg, #111 0%, #080808 100%);
+            background: linear-gradient(145deg, #161617 0%, #0a0a0a 100%);
             border: 1px solid var(--xm-border); border-radius: 16px; padding: 30px;
-            text-align: left; height: 100%; transition: 0.3s;
+            text-align: left; height: 100%; transition: 0.3s; position: relative; overflow: hidden;
+        }
+        .pg-card::before {
+            content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 0;
+            background: var(--xm-highlight); transition: height 0.3s ease;
         }
         .pg-card:hover { border-color: rgba(255,255,255,0.2); box-shadow: 0 10px 30px rgba(0,0,0,0.5); transform: translateY(-5px);}
+        .pg-card:hover::before { height: 100%; }
         .pg-name { font-size: 1.3rem; font-weight: 800; color: #fff; margin-bottom: 8px; }
         .pg-role { font-size: 0.8rem; color: var(--xm-highlight); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 15px; display: block;}
         .pg-desc { font-size: 0.9rem; color: var(--xm-gray-text); line-height: 1.6; margin-bottom: 0;}
 
         /* 照片墙 Grid */
         .photo-gallery { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; }
-        .gallery-item { border-radius: 12px; overflow: hidden; aspect-ratio: 4/3; position: relative; }
+        .gallery-item { border-radius: 12px; overflow: hidden; aspect-ratio: 4/3; position: relative; background: #111; }
         .gallery-item img { width: 100%; height: 100%; object-fit: cover; filter: grayscale(20%); transition: 0.5s; cursor: pointer;}
         .gallery-item:hover img { filter: grayscale(0%); transform: scale(1.08); }
         .gallery-caption { position: absolute; bottom: 0; left: 0; width: 100%; padding: 15px; background: linear-gradient(to top, rgba(0,0,0,0.9), transparent); color: #fff; font-size: 0.85rem; transform: translateY(100%); transition: 0.3s;}
@@ -172,7 +209,11 @@
             .section-header h2 { font-size: 2.2rem; }
             .stat-num { font-size: 1.8rem; }
             .stat-desc { font-size: 0.75rem; }
-            .stats-row .border-right { border-right: none; }
+            
+            /* 数据栏改为 2x2 网格 */
+            .stats-row .border-md-right { border-right: none; }
+            .stats-row .col-6:nth-child(odd) { border-right: 1px solid var(--xm-border); }
+            .stats-row .col-6 { margin-bottom: 15px; }
             
             .xm-card { padding: 25px; }
             
@@ -181,27 +222,25 @@
             .feature-text { padding: 25px 0 0 0; text-align: left; }
             .feature-title { font-size: 1.8rem; }
             
-            /* 团队列表换行 */
-            .team-list-item { flex-direction: column; align-items: flex-start; }
-            .team-name { margin-bottom: 8px; }
-            .team-title { text-align: left; }
+            /* 专家卡片手机端间距调整 */
+            .expert-box { padding: 16px; }
 
             .edu-big-num { font-size: 6rem; }
             .stats-row { bottom: 2vh; }
             
-            .navbar-collapse { background: rgba(0,0,0,0.95); padding: 20px; border-radius: 12px; margin-top: 10px; border: 1px solid #333;}
+            .navbar-collapse { background: rgba(5,5,5,0.95); padding: 20px; border-radius: 12px; margin-top: 10px; border: 1px solid #333;}
         }
 
         footer { padding: 50px 0; border-top: 1px solid var(--xm-border); background-color: var(--xm-black); color: var(--xm-gray-text); font-size: 0.85rem; }
     </style>
 </head>
-<body>
+<body data-bs-spy="scroll" data-bs-target="#navbarNav" data-bs-offset="100" tabindex="0">
 
     <!-- 极简导航 -->
     <nav class="navbar navbar-expand-lg fixed-top">
         <div class="container">
-            <a class="navbar-brand" href="#">AE-POWER</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" style="border:none; outline:none;">
+            <a class="navbar-brand" href="#home">AE-POWER</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" style="border:none; outline:none; box-shadow: none;">
                 <i class="fas fa-bars text-white fs-4"></i>
             </button>
             <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
@@ -212,6 +251,7 @@
                     <li class="nav-item"><a class="nav-link" href="#equipment">硬核装备</a></li>
                     <li class="nav-item"><a class="nav-link" href="#gallery">影像画廊</a></li>
                     <li class="nav-item"><a class="nav-link" href="#education">产学融合</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#join">加入我们</a></li>
                 </ul>
             </div>
         </div>
@@ -220,6 +260,7 @@
     <!-- 首页大片 -->
     <section id="home" class="hero-section">
         <div class="hero-bg"></div>
+        <div class="hero-glow"></div>
         <div class="speed-lines"></div>
         <div class="hero-gradient"></div>
 
@@ -232,23 +273,23 @@
             </p>
         </div>
 
-        <div class="stats-row reveal" style="transition-delay: 0.3s;">
+        <div class="stats-row reveal" style="transition-delay: 0.3s;" id="stats-section">
             <div class="container">
                 <div class="row g-3">
                     <div class="col-md-3 col-6 stat-item border-md-right">
-                        <div class="stat-num">140<span style="font-size:1.2rem;">W+</span></div>
+                        <div class="stat-num"><span class="counter-value" data-target="140">0</span><span style="font-size:1.2rem;">W+</span></div>
                         <div class="stat-desc">科研主持金额</div>
                     </div>
                     <div class="col-md-3 col-6 stat-item border-md-right">
-                        <div class="stat-num">47<span style="font-size:1.2rem;">篇</span></div>
+                        <div class="stat-num"><span class="counter-value" data-target="47">0</span><span style="font-size:1.2rem;">篇</span></div>
                         <div class="stat-desc">高水平学术论文</div>
                     </div>
                     <div class="col-md-3 col-6 stat-item border-md-right">
-                        <div class="stat-num">42<span style="font-size:1.2rem;">项</span></div>
+                        <div class="stat-num"><span class="counter-value" data-target="42">0</span><span style="font-size:1.2rem;">项</span></div>
                         <div class="stat-desc">发明专利与软著</div>
                     </div>
                     <div class="col-md-3 col-6 stat-item border-0">
-                        <div class="stat-num">3.63<span style="font-size:1.2rem;">亿</span></div>
+                        <div class="stat-num"><span class="counter-value" data-target="3.63">0</span><span style="font-size:1.2rem;">亿</span></div>
                         <div class="stat-desc">技术转化总效益</div>
                     </div>
                 </div>
@@ -256,7 +297,7 @@
         </div>
     </section>
 
-    <!-- 阶梯式团队架构 (增加团队拼图区) -->
+    <!-- 阶梯式团队架构 -->
     <section id="team" class="section-padding bg-dark-1">
         <div class="container">
             <div class="section-header reveal">
@@ -266,34 +307,38 @@
             
             <div class="row g-4 mb-5">
                 <!-- 领军人物与团队风采图 -->
-                <div class="col-lg-5 reveal">
+                <div class="col-lg-4 reveal">
                     <div class="xm-card p-0 h-100 d-flex flex-column">
-                        <!-- 领头人主图 -->
-                        <div class="ppt-img-container m-0" style="flex-grow: 1; border-radius: 24px 24px 0 0; overflow: hidden; position: relative; aspect-ratio: 3/4; /* 竖版人像常用比例，防过度拉伸 */">
-    <span class="ppt-tag">LEADER 石大排教授</span>
-    <img src="images/shidapai.jpg" 
-         alt="石大排 教授" 
-         class="img-fluid rounded shadow" 
-         style="width: 100%; height: 100%; object-fit: contain; object-position: top center; display: block;"
-         loading="lazy">
-</div>
-                        <div class="p-4">
-                            <h3 class="fw-bold text-white mb-2">石大排 <span class="fs-6 text-muted ms-2">博士 / 教授</span></h3>
-                            <p class="text-white-50 mb-3 small">吉林大学工学博士 | 上海交通大学博士后</p>
+                        <!-- 领头人主图 - 比例调整为 1:1，彻底解决太长的问题 -->
+                        <div class="ppt-img-container m-0 leader-img-box" style="flex-grow: 0; border-radius: 24px 24px 0 0; overflow: hidden; position: relative; aspect-ratio: 1/1;">
+                            <span class="ppt-tag">LEADER 石大排教授</span>
+                            <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=800&q=80" 
+                                 alt="石大排 教授" 
+                                 class="img-fluid rounded shadow" 
+                                 style="width: 100%; height: 100%; object-fit: cover; object-position: center 15%; display: block;"
+                                 loading="lazy">
+                        </div>
+                        <div class="p-4 d-flex flex-column flex-grow-1">
+                            <h3 class="fw-bold text-white mb-2 d-flex align-items-center">
+                                石大排 
+                                <!-- 提亮头衔：加入纯正科技蓝高亮边框和底色 -->
+                                <span class="badge bg-primary bg-opacity-25 text-primary ms-3 fw-normal" style="font-size: 0.75rem; letter-spacing: 1px; border: 1px solid rgba(0,113,227,0.5);">博士 / 教授</span>
+                            </h3>
+                            <p class="mb-3 small" style="color: #c1c1c4;">吉林大学工学博士 | 上海交通大学博士后</p>
                             <p class="text-white-50 mb-4" style="font-size: 0.95rem; line-height: 1.6;">
                                 领衔新能源汽车动力系统优化及测试技术攻坚。致力于动力电池SOC/SOH高精度预估与智能网联底层架构突破。
                             </p>
                             
-                            <!-- 🖼️ 增加图片坑位：团队合影拼图区 (对应 PPT Image 1-7) -->
-                            <div class="row g-2 mt-auto">
+                            <!-- 团队合影拼图区 -->
+                            <div class="row g-2 mt-auto pt-2">
                                 <div class="col-4">
                                     <div class="ppt-img-container m-0" style="aspect-ratio: 1/1; border-radius: 8px;">
-                                        <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=300&q=80" alt="[替换图:团队合影1]">
+                                        <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=300&q=80" alt="团队合影1" loading="lazy">
                                     </div>
                                 </div>
                                 <div class="col-4">
                                     <div class="ppt-img-container m-0" style="aspect-ratio: 1/1; border-radius: 8px;">
-                                        <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=300&q=80" alt="[替换图:团队合影2]">
+                                        <img src="https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?auto=format&fit=crop&w=300&q=80" alt="团队合影2" loading="lazy">
                                     </div>
                                 </div>
                                 <div class="col-4">
@@ -308,26 +353,66 @@
                     </div>
                 </div>
 
-                <!-- 专家指导矩阵 -->
-                <div class="col-lg-7 reveal" style="transition-delay: 0.2s;">
-                    <div class="xm-card d-flex flex-column justify-content-center">
-                        <h4 class="text-white fw-bold mb-4">资深专家指导组</h4>
-                        <div class="team-list">
-                            <div class="team-list-item">
-                                <span class="team-name">汪云 <span class="badge bg-secondary fw-light ms-2">教授</span></span>
-                                <span class="team-title">深耕新能源汽车动力测试理论与多维协同控制前沿</span>
+                <!-- 专家指导矩阵 - 从 col-lg-7 扩宽为 col-lg-8 增加呼吸感 -->
+                <div class="col-lg-8 reveal" style="transition-delay: 0.2s;">
+                    <div class="xm-card p-4 p-xl-5 h-100 d-flex flex-column">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h4 class="text-white fw-bold mb-0">资深专家指导组</h4>
+                            <span class="badge bg-secondary bg-opacity-25 text-white-50 px-3 py-2 rounded-pill fw-normal d-none d-sm-block">Core Mentors</span>
+                        </div>
+                        
+                        <div class="row g-3 flex-grow-1">
+                            <!-- 汪云 -->
+                            <div class="col-md-6">
+                                <div class="expert-box">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=100&q=80" alt="汪云" class="expert-avatar me-3" loading="lazy">
+                                        <div>
+                                            <div class="expert-name">汪云 <span class="badge border border-secondary text-secondary ms-1 fw-normal" style="font-size: 0.65rem; padding: 0.2em 0.5em;">教授</span></div>
+                                            <div class="expert-title">新能源测试 / 协同控制</div>
+                                        </div>
+                                    </div>
+                                    <p class="expert-desc">深耕新能源汽车动力测试理论与前沿，重点突破复杂工况下的动力耦合与系统级效能寻优难题。</p>
+                                </div>
                             </div>
-                            <div class="team-list-item">
-                                <span class="team-name">马强 <span class="badge bg-secondary fw-light ms-2">教授</span></span>
-                                <span class="team-title">主攻电动车驱动电机高频控制技术与底层逻辑算法</span>
+                            <!-- 马强 -->
+                            <div class="col-md-6">
+                                <div class="expert-box">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <img src="https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=100&q=80" alt="马强" class="expert-avatar me-3" loading="lazy">
+                                        <div>
+                                            <div class="expert-name">马强 <span class="badge border border-secondary text-secondary ms-1 fw-normal" style="font-size: 0.65rem; padding: 0.2em 0.5em;">教授</span></div>
+                                            <div class="expert-title">电机驱动 / 底层算法</div>
+                                        </div>
+                                    </div>
+                                    <p class="expert-desc">主攻电动车驱动电机高频控制技术，曾主持开发多款高效能电机驱动器与高可靠性核心控制器件。</p>
+                                </div>
                             </div>
-                            <div class="team-list-item">
-                                <span class="team-name">贾巍 <span class="badge bg-secondary fw-light ms-2">副教授</span></span>
-                                <span class="team-title">主导底层控制平台与测控操作系统内核架构的研发</span>
+                            <!-- 贾巍 -->
+                            <div class="col-md-6">
+                                <div class="expert-box">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?auto=format&fit=crop&w=100&q=80" alt="贾巍" class="expert-avatar me-3" loading="lazy">
+                                        <div>
+                                            <div class="expert-name">贾巍 <span class="badge border border-secondary text-secondary ms-1 fw-normal" style="font-size: 0.65rem; padding: 0.2em 0.5em;">副教授</span></div>
+                                            <div class="expert-title">系统架构 / 测控平台</div>
+                                        </div>
+                                    </div>
+                                    <p class="expert-desc">主导底层控制平台与内核架构研发，成功打通从硬件传感器高速接口到云端数据链的全栈通信。</p>
+                                </div>
                             </div>
-                            <div class="team-list-item">
-                                <span class="team-name">刘静 <span class="badge bg-secondary fw-light ms-2">副教授</span></span>
-                                <span class="team-title">道路信息预测算法研究及大规模虚拟仿真系统构建</span>
+                            <!-- 刘静 -->
+                            <div class="col-md-6">
+                                <div class="expert-box">
+                                    <div class="d-flex align-items-center mb-3">
+                                        <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=100&q=80" alt="刘静" class="expert-avatar me-3" loading="lazy">
+                                        <div>
+                                            <div class="expert-name">刘静 <span class="badge border border-secondary text-secondary ms-1 fw-normal" style="font-size: 0.65rem; padding: 0.2em 0.5em;">副教授</span></div>
+                                            <div class="expert-title">虚拟仿真 / 数字孪生</div>
+                                        </div>
+                                    </div>
+                                    <p class="expert-desc">聚焦道路信息预测算法研究，主导创建了数字孪生级无人驾驶测试与复杂环境大规模模拟平台。</p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -371,7 +456,7 @@
         </div>
     </section>
 
-    <!-- 核心技术架构 (增加卡片配图区) -->
+    <!-- 核心技术架构 -->
     <section id="research" class="section-padding">
         <div class="container">
             <div class="section-header reveal">
@@ -382,8 +467,7 @@
             <div class="row g-4">
                 <div class="col-lg-4 col-md-12 reveal">
                     <div class="xm-card p-0 d-flex flex-column text-center">
-                        <!-- 🖼️ 增加图片坑位 -->
-                        <img src="https://s7d1.scene7.com/is/image/CENODS/WCO--Clean-hydrogen---266450?\( responsive \)&qlt=90,0&resMode=sharp2&fmt=webp" alt="images/b4.jpg" style="width:100%; height:200px; object-fit:cover; filter: grayscale(30%);">
+                        <img src="https://images.unsplash.com/photo-1473625247510-8ceb1760943f?auto=format&fit=crop&w=800&q=80" alt="新能源" style="width:100%; height:200px; object-fit:cover; filter: grayscale(30%);" loading="lazy">
                         <div class="p-4">
                             <h4 class="text-white fw-bold mb-3 mt-2">新能源与氢能动力</h4>
                             <p class="text-white-50 small mb-0" style="line-height: 1.8;">
@@ -394,7 +478,7 @@
                 </div>
                 <div class="col-lg-4 col-md-12 reveal" style="transition-delay: 0.1s;">
                     <div class="xm-card p-0 d-flex flex-column text-center">
-                        <img src="https://us.bosch-press.com/pressportal/us/media/dam_images_us/pi279_usus/15_xc_visuals_handson_driving_ai_ring_50perz_v7_img_w1280.png" alt="[替换图:智能网联]" style="width:100%; height:200px; object-fit:cover; filter: grayscale(30%);">
+                        <img src="https://images.unsplash.com/photo-1620021603598-65ec4d17f417?auto=format&fit=crop&w=800&q=80" alt="智能网联" style="width:100%; height:200px; object-fit:cover; filter: grayscale(30%);" loading="lazy">
                         <div class="p-4">
                             <h4 class="text-white fw-bold mb-3 mt-2">智能网联与仿真控制</h4>
                             <p class="text-white-50 small mb-0" style="line-height: 1.8;">
@@ -405,7 +489,7 @@
                 </div>
                 <div class="col-lg-4 col-md-12 reveal" style="transition-delay: 0.2s;">
                     <div class="xm-card p-0 d-flex flex-column text-center">
-                        <img src="https://img.oemoffhighway.com/files/base/acbm/ooh/image/2020/04/9J6A4576.5e9470bef0d90.png?auto=format%2Ccompress&rect=0%2C75%2C1920%2C1080&q=70" alt="[替换图:智慧农业]" style="width:100%; height:200px; object-fit:cover; filter: grayscale(30%);">
+                        <img src="https://images.unsplash.com/photo-1586771107445-d3ca888129ff?auto=format&fit=crop&w=800&q=80" alt="智慧农业" style="width:100%; height:200px; object-fit:cover; filter: grayscale(30%);" loading="lazy">
                         <div class="p-4">
                             <h4 class="text-white fw-bold mb-3 mt-2">机械结构与智慧农业</h4>
                             <p class="text-white-50 small mb-0" style="line-height: 1.8;">
@@ -418,32 +502,28 @@
         </div>
     </section>
 
-    <!-- 标杆自研装备 (升级为支持多图轮播的设备展示) -->
+    <!-- 标杆自研装备 -->
     <section id="equipment" class="section-padding bg-dark-1">
         <div class="container">
             <div class="section-header reveal">
-                <h2>超级自研硬件与测试舱</h2>
+                <h2>无人驾驶硬件平台与混合动力测试平台</h2>
                 <p>打破虚拟与现实边界，从代码算法直达钢铁硬件。</p>
             </div>
 
-            <!-- 产品排版 1：无人驾驶 (引入 Carousel 轮播图) -->
+            <!-- 产品排版 1：无人驾驶 -->
             <div class="row feature-row reveal">
                 <div class="col-lg-7 col-md-12">
-                    <!-- 🖼️ 增加图片坑位：多图轮播组件 -->
                     <div id="autonomousCarousel" class="carousel slide ppt-img-container m-0" data-bs-ride="carousel" style="aspect-ratio: 16/10;">
-                        <span class="ppt-tag bg-primary">无人驾驶实车矩阵</span>
+                        <span class="ppt-tag">无人驾驶实车矩阵</span>
                         <div class="carousel-inner h-100">
-                            <!-- 第一张图 -->
                             <div class="carousel-item active h-100">
-                                <img src="https://images.unsplash.com/photo-1620021603598-65ec4d17f417?auto=format&fit=crop&w=1000&q=80" class="d-block w-100 h-100 object-fit-cover" alt="[替换图:无人车1]">
+                                <img src="https://images.unsplash.com/photo-1620021603598-65ec4d17f417?auto=format&fit=crop&w=1000&q=80" class="d-block w-100 h-100 object-fit-cover" alt="无人车1" loading="lazy">
                             </div>
-                            <!-- 第二张图 -->
                             <div class="carousel-item h-100">
-                                <img src="https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=1000&q=80" class="d-block w-100 h-100 object-fit-cover" alt="[替换图:无人车2]">
+                                <img src="https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?auto=format&fit=crop&w=1000&q=80" class="d-block w-100 h-100 object-fit-cover" alt="无人车2" loading="lazy">
                             </div>
-                            <!-- 第三张图 (内蒙古测试) -->
                             <div class="carousel-item h-100">
-                                <img src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=1000&q=80" class="d-block w-100 h-100 object-fit-cover" alt="[替换图:内蒙古路测]">
+                                <img src="https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?auto=format&fit=crop&w=1000&q=80" class="d-block w-100 h-100 object-fit-cover" alt="内蒙古路测" loading="lazy">
                             </div>
                         </div>
                         <button class="carousel-control-prev" type="button" data-bs-target="#autonomousCarousel" data-bs-slide="prev">
@@ -464,9 +544,28 @@
             <!-- 产品排版 2：氢能测控 -->
             <div class="row feature-row reveal">
                 <div class="col-lg-6 col-md-12">
-                    <div class="ppt-img-container m-0" style="aspect-ratio: 4/3;">
+                    <div id="hybridCarousel" class="carousel slide ppt-img-container m-0" data-bs-ride="carousel" style="aspect-ratio: 4/3;">
                         <span class="ppt-tag">氢能/多电机实拍</span>
-                        <img src="https://images.unsplash.com/photo-1580901368919-7738efb02e75?auto=format&fit=crop&w=800&q=80" alt="[替换图:氢能/电机台架]">
+                        <div class="carousel-inner h-100">
+                            <!-- 第一张图：主台架 -->
+                            <div class="carousel-item active h-100">
+                                <img src="https://images.unsplash.com/photo-1580901368919-7738efb02e75?auto=format&fit=crop&w=800&q=80" class="d-block w-100 h-100 object-fit-cover" alt="" loading="lazy">
+                            </div>
+                            <!-- 第二张图：内部组件/控制器 -->
+                            <div class="carousel-item h-100">
+                                <img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=800&q=80" class="d-block w-100 h-100 object-fit-cover" alt="" loading="lazy">
+                            </div>
+                            <!-- 第三张图：数据监控界面或局部特写 -->
+                            <div class="carousel-item h-100">
+                                <img src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?auto=format&fit=crop&w=800&q=80" class="d-block w-100 h-100 object-fit-cover" alt="" loading="lazy">
+                            </div>
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#hybridCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#hybridCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        </button>
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-12 feature-text">
@@ -482,7 +581,7 @@
                     <div class="xm-card p-0 d-flex flex-column text-left border-0">
                         <div class="ppt-img-container m-0" style="border-radius: 24px 24px 0 0; border:none;">
                             <span class="ppt-tag">农业轻量化装备</span>
-                            <img src="https://images.unsplash.com/photo-1586771107445-d3ca888129ff?auto=format&fit=crop&w=800&q=80" alt="[替换图:农业机器人]">
+                            <img src="https://images.unsplash.com/photo-1586771107445-d3ca888129ff?auto=format&fit=crop&w=800&q=80" alt="农业机器人" loading="lazy">
                         </div>
                         <div class="p-4 bg-dark-2" style="border-radius: 0 0 24px 24px; border: 1px solid rgba(255,255,255,0.05); border-top: none;">
                             <div class="feature-author mb-2">李保琛</div>
@@ -496,7 +595,7 @@
                     <div class="xm-card p-0 d-flex flex-column text-left border-0">
                         <div class="ppt-img-container m-0" style="border-radius: 24px 24px 0 0; border:none;">
                             <span class="ppt-tag">ARBIN测试系统</span>
-                            <img src="https://images.unsplash.com/photo-1581092334651-ddf26d9a09d0?auto=format&fit=crop&w=800&q=80" alt="[替换图:电池柜]">
+                            <img src="https://images.unsplash.com/photo-1581092334651-ddf26d9a09d0?auto=format&fit=crop&w=800&q=80" alt="" loading="lazy">
                         </div>
                         <div class="p-4 bg-dark-2" style="border-radius: 0 0 24px 24px; border: 1px solid rgba(255,255,255,0.05); border-top: none;">
                             <div class="feature-author mb-2">蔡密生</div>
@@ -510,150 +609,42 @@
         </div>
     </section>
 
-    <!-- 🌟全新新增：科研与试验实景画廊 (专门放PPT 71-79的大量图表和照片) -->
-    <section id="gallery" class="section-padding">
-        <div class="container">
-            <div class="section-header reveal">
-                <h2>科研视界与试验实录</h2>
-                <p>记录每一次电芯脉冲、每一次外场驰骋与产学研交流的高光时刻。</p>
-            </div>
-            
-            <!-- 🖼️ 增加图片坑位：照片墙 Grid 布局 -->
-            <div class="photo-gallery reveal">
-                <div class="gallery-item">
-                    <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=500&q=80" alt="[替换图:电池数据图表1]">
-                    <div class="gallery-caption">动力电池多物理场数据标定</div>
-                </div>
-                <div class="gallery-item">
-                    <img src="https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?auto=format&fit=crop&w=500&q=80" alt="[替换图:电池数据图表2]">
-                    <div class="gallery-caption">SOH 寿命衰减预测曲线</div>
-                </div>
-                <div class="gallery-item">
-                    <img src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&w=500&q=80" alt="[替换图:产学交流图79]">
-                    <div class="gallery-caption">顶尖高校产学研技术交流</div>
-                </div>
-                <div class="gallery-item">
-                    <img src="https://images.unsplash.com/photo-1581092162384-8987c1d64718?auto=format&fit=crop&w=500&q=80" alt="[替换图:实验室日常]">
-                    <div class="gallery-caption">控制硬件底层焊接与调试</div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 研究生培养体系 -->
-    <section id="education" class="section-padding bg-dark-1">
-        <div class="container">
-            <div class="section-header reveal">
-                <h2>深耕育人：学术造血与传承</h2>
-                <p>一流的台架锻造一流的人才。将前沿整车技术反哺教学，构建卓越的学术晋升通道。</p>
-            </div>
-
-            <div class="row justify-content-center align-items-center reveal">
-                <div class="col-lg-4 text-center mb-5 mb-lg-0">
-                    <div class="edu-big-num">5</div>
-                    <h3 class="text-white fw-bold mt-3">位杰出博士校友</h3>
-                    <p class="text-white-50">从课题组台架走向顶尖科研殿堂</p>
-                </div>
-                <div class="col-lg-7 offset-lg-1">
-                    <div class="xm-card p-4 p-md-5" style="border: 1px solid rgba(255,255,255,0.05);">
-                        <h4 class="text-white mb-4"><i class="fas fa-graduation-cap me-3" style="color:var(--xm-highlight);"></i>产学融合与人才培养</h4>
-                        <p class="text-white-50 mb-4" style="line-height: 1.8; font-size: 1rem;">
-                            课题组极度重视“理论创新 + 硬核工程”的双向赋能。硕士研究生不仅在顶级期刊发文，更作为项目主理人带队搭建台架并对接企业一线。相关成果深度反哺于《智能网联汽车概论》等核心课程。
-                        </p>
-                        <div class="border-top border-secondary pt-4 mt-4">
-                            <h6 class="text-white mb-3">🎓 卓越的毕业生深造通道</h6>
-                            <p class="text-white-50 mb-0" style="line-height: 1.6;">
-                                凭借扎实的“软硬兼备”素养，团队已有 <strong>5名</strong> 毕业生前往 <span class="text-white fw-bold">华南理工大学</span>、<span class="text-white fw-bold">西安理工大学</span> 等双一流高校及重点科研院所攻读博士学位。
-                            </p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- 生态合作与知识产权 (合并展示，优化手机端排版) -->
-    <section id="coop" class="section-padding" style="background: url('https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=2000&q=80') center/cover no-repeat; background-attachment: fixed; position: relative;">
-        <div style="position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(0,0,0,0.85);"></div>
+    <!-- 加入我们 (带视差跑车背景与毛玻璃特效，极简黑白灰风格) -->
+    <section id="join" class="section-padding border-top border-secondary" style="background: url('https://images.unsplash.com/photo-1553440569-bcc63803a83d?auto=format&fit=crop&w=2000&q=80') center/cover no-repeat; background-attachment: fixed; position: relative;">
+        <!-- 深色质感遮罩层，确保文字可读性 -->
+        <div style="position: absolute; top:0; left:0; width:100%; height:100%; background: rgba(5,5,5,0.85); z-index: 0;"></div>
         
-        <div class="container position-relative z-index-1 reveal">
-            <div class="section-header">
-                <h2>开放生态与硬核硕果</h2>
-                <p>跨界联动、技术转化变现，以高被引论文和硬核专利构筑行业壁垒。</p>
-            </div>
-            
-            <!-- 产学合作 Grid -->
-            <div class="row text-center g-3 justify-content-center mb-5">
-                <div class="col-lg-3 col-6">
-                    <div class="p-4 border rounded-4 border-secondary backdrop-blur h-100 d-flex flex-column justify-content-center" style="background: rgba(255,255,255,0.03);">
-                        <i class="fas fa-university fa-2x mb-3 text-white"></i>
-                        <h6 class="text-white fw-bold mb-2">山东理工大学</h6>
-                        <p class="text-white-50 small mb-0 d-none d-md-block">联合申报智慧农业标杆项目。</p>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-6">
-                    <div class="p-4 border rounded-4 border-secondary backdrop-blur h-100 d-flex flex-column justify-content-center" style="background: rgba(255,255,255,0.03);">
-                        <i class="fas fa-bolt fa-2x mb-3 text-white"></i>
-                        <h6 class="text-white fw-bold mb-2">电气领军企业</h6>
-                        <p class="text-white-50 small mb-0 d-none d-md-block">深度对接德普电气/瑞达定制系统。</p>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-6">
-                    <div class="p-4 border rounded-4 border-secondary backdrop-blur h-100 d-flex flex-column justify-content-center" style="background: rgba(255,255,255,0.03);">
-                        <i class="fas fa-seedling fa-2x mb-3 text-white"></i>
-                        <h6 class="text-white fw-bold mb-2">飞钟机械粮油</h6>
-                        <p class="text-white-50 small mb-0 d-none d-md-block">转化除草机器人及智能加工机械。</p>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-6">
-                    <div class="p-4 border rounded-4 border-secondary backdrop-blur h-100 d-flex flex-column justify-content-center" style="background: rgba(255,255,255,0.03);">
-                        <i class="fas fa-globe-asia fa-2x mb-3 text-white"></i>
-                        <h6 class="text-white fw-bold mb-2">内蒙古测试基地</h6>
-                        <p class="text-white-50 small mb-0 d-none d-md-block">提供极寒实测标定与可靠性验证。</p>
-                    </div>
-                </div>
-            </div>
-
-            <!-- 学术成果 Tabs -->
-            <div class="row justify-content-center">
-                <div class="col-lg-10 bg-dark-2 p-4 rounded-4" style="border: 1px solid rgba(255,255,255,0.05);">
-                    <ul class="nav nav-tabs justify-content-center mb-4" id="academicTabs" role="tablist">
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link active px-3" id="paper-tab" data-bs-toggle="tab" data-bs-target="#paper" type="button" role="tab">SCI论文 (47+篇)</button>
-                        </li>
-                        <li class="nav-item" role="presentation">
-                            <button class="nav-link px-3" id="patent-tab" data-bs-toggle="tab" data-bs-target="#patent" type="button" role="tab">专利软著 (42项)</button>
-                        </li>
-                    </ul>
-                    <div class="tab-content" id="academicTabsContent">
-                        <div class="tab-pane fade show active" id="paper" role="tabpanel">
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item bg-transparent text-white-50 border-secondary px-0 py-3">
-                                    <strong class="text-white d-block mb-1">Insights and reviews on battery lifetime prediction from research to practice</strong>
-                                    Journal of Energy Chemistry, 2024 (顶刊高被引)
-                                </li>
-                                <li class="list-group-item bg-transparent text-white-50 border-secondary px-0 py-3">
-                                    <strong class="text-white d-block mb-1">Battery health diagnostics: Bridging the gap between academia and industry</strong>
-                                    eTransportation, 2023
-                                </li>
-                            </ul>
+        <div class="container reveal position-relative" style="z-index: 1;">
+            <!-- 高级毛玻璃悬浮卡片 -->
+            <div class="xm-card text-center p-4 p-md-5" style="border: 1px solid rgba(255, 255, 255, 0.1); background: rgba(20, 20, 20, 0.5); backdrop-filter: saturate(180%) blur(20px); -webkit-backdrop-filter: saturate(180%) blur(20px); box-shadow: 0 30px 60px rgba(0,0,0,0.6);">
+                <i class="fas fa-paper-plane fa-3x mb-4 text-white"></i>
+                <h2 class="text-white fw-bold mb-3">开启你的极客之旅</h2>
+                <p class="text-white-50 mx-auto mb-5" style="max-width: 650px; font-size: 1.1rem; line-height: 1.8;">
+                    我们始终在寻找充满激情与创造力的青年才俊。无论你是对底层算法着迷的极客，还是热衷于机械结构与硬件开发的实干家，在这里，你都能找到让代码与钢铁共鸣的舞台。
+                </p>
+                
+                <div class="row justify-content-center g-4 mb-5">
+                    <div class="col-md-5">
+                        <div class="p-4 rounded-4 h-100" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); transition: 0.3s;" onmouseover="this.style.borderColor='rgba(255,255,255,0.4)'; this.style.background='rgba(255,255,255,0.06)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)'; this.style.background='rgba(255,255,255,0.03)';">
+                            <h5 class="text-white fw-bold mb-2"><i class="fas fa-user-graduate me-2"></i>研究生招生</h5>
+                            <p class="text-white-50 small mb-0">面向机械工程、车辆工程、电子信息、自动化等相关专业背景的优秀学子。</p>
                         </div>
-                        <div class="tab-pane fade" id="patent" role="tabpanel">
-                            <ul class="list-group list-group-flush">
-                                <li class="list-group-item bg-transparent text-white-50 border-secondary px-0 py-3">
-                                    <strong class="text-white d-block mb-1">基于行驶工况的能量控制方法、设备及装置 (ZL 201911280471.1)</strong>
-                                    国家授权发明专利
-                                </li>
-                                <li class="list-group-item bg-transparent text-white-50 border-secondary px-0 py-3">
-                                    <strong class="text-white d-block mb-1">软件著作权：电动汽车再生制动技术研发管控系统</strong>
-                                    独立自研底层OS与控制软件
-                                </li>
-                            </ul>
+                    </div>
+                    <div class="col-md-5">
+                        <div class="p-4 rounded-4 h-100" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); transition: 0.3s;" onmouseover="this.style.borderColor='rgba(255,255,255,0.4)'; this.style.background='rgba(255,255,255,0.06)';" onmouseout="this.style.borderColor='rgba(255,255,255,0.08)'; this.style.background='rgba(255,255,255,0.03)';">
+                            <h5 class="text-white fw-bold mb-2"><i class="fas fa-laptop-code me-2"></i>本科生科创团队</h5>
+                            <p class="text-white-50 small mb-0">长期接受拥有自驱力、热爱钻研的大二/大三本科生提前进组参与硬核项目。</p>
                         </div>
                     </div>
                 </div>
-            </div>
 
+                <div class="mt-2">
+                    <a href="mailto:shidapai@hbuas.edu.cn" class="btn px-5 py-3 rounded-pill fw-bold" style="background: #fff; color: #000; border: none; font-size: 1.1rem; box-shadow: 0 10px 30px rgba(255,255,255,0.1); transition: all 0.3s;" onmouseover="this.style.transform='translateY(-3px)'; this.style.boxShadow='0 15px 35px rgba(255,255,255,0.2)';" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 10px 30px rgba(255,255,255,0.1)';">
+                        <i class="fas fa-envelope me-2"></i> 发送简历与作品集
+                    </a>
+                    <p class="text-white-50 small mt-4 mb-0">课题组负责人邮箱：shidapai@hbuas.edu.cn (请注明应聘/报考意向)</p>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -669,24 +660,24 @@
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
-    <!-- 滚动特效 -->
+    <!-- 交互与动画脚本 -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const navbar = document.querySelector('.navbar');
             const navCollapse = document.querySelector('.navbar-collapse');
             
-            // 滚动时改变导航栏样式
+            // 1. 滚动时改变导航栏样式
             window.addEventListener('scroll', () => {
                 if (window.scrollY > 50) {
-                    navbar.style.background = 'rgba(0, 0, 0, 0.85)';
+                    navbar.style.background = 'rgba(5, 5, 5, 0.85)';
                     navbar.style.borderBottom = '1px solid rgba(255,255,255,0.1)';
                 } else {
-                    navbar.style.background = 'rgba(0, 0, 0, 0.4)';
+                    navbar.style.background = 'rgba(5, 5, 5, 0.4)';
                     navbar.style.borderBottom = '1px solid rgba(255,255,255,0.05)';
                 }
             });
 
-            // 手机端点击菜单后自动折叠
+            // 2. 手机端点击菜单后自动折叠
             document.querySelectorAll('.nav-link').forEach(link => {
                 link.addEventListener('click', () => {
                     if(navCollapse.classList.contains('show')) {
@@ -696,8 +687,8 @@
                 });
             });
 
-            // Intersection Observer 实现滚动丝滑浮现
-            const observer = new IntersectionObserver((entries, obs) => {
+            // 3. Intersection Observer: 滚动丝滑浮现
+            const revealObserver = new IntersectionObserver((entries, obs) => {
                 entries.forEach(entry => {
                     if (entry.isIntersecting) {
                         entry.target.classList.add('active');
@@ -706,13 +697,71 @@
                 });
             }, { threshold: 0.1 });
 
-            document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+            document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+            // 4. 数字跳动动画 (Number Counter)
+            const animateCounter = (el) => {
+                const target = parseFloat(el.getAttribute('data-target'));
+                const duration = 2000; // 动画时长 2 秒
+                let startTimestamp = null;
+                const isFloat = !Number.isInteger(target) && target.toString().includes('.');
+
+                const step = (timestamp) => {
+                    if (!startTimestamp) startTimestamp = timestamp;
+                    const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                    // easeOutQuart 缓动函数，让数字跳动有逐渐减速的高级感
+                    const easeProgress = 1 - Math.pow(1 - progress, 4);
+                    
+                    const currentVal = progress * target;
+                    
+                    if (isFloat) {
+                        el.innerText = (easeProgress * target).toFixed(2);
+                    } else {
+                        el.innerText = Math.floor(easeProgress * target);
+                    }
+
+                    if (progress < 1) {
+                        window.requestAnimationFrame(step);
+                    } else {
+                        el.innerText = target; // 确保最终数字准确无误
+                    }
+                };
+                window.requestAnimationFrame(step);
+            };
+
+            const counterObserver = new IntersectionObserver((entries, obs) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const counters = entry.target.querySelectorAll('.counter-value');
+                        counters.forEach(counter => animateCounter(counter));
+                        obs.unobserve(entry.target); // 动画只执行一次
+                    }
+                });
+            }, { threshold: 0.5 }); // 当元素露出一半时触发
+
+            // 监听包含数字的区域
+            const statsSection = document.getElementById('stats-section');
+            if(statsSection) counterObserver.observe(statsSection);
+            
+            // 监听底部的毕业生数字
+            const eduSection = document.getElementById('education');
+            if(eduSection) counterObserver.observe(eduSection);
+            
+            // Tabs 切换高亮处理
+            const tabButtons = document.querySelectorAll('#academicTabs .nav-link');
+            tabButtons.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    tabButtons.forEach(b => {
+                        b.classList.remove('text-white', 'fw-bold');
+                        b.classList.add('text-secondary');
+                        b.style.fontWeight = 'normal';
+                    });
+                    this.classList.remove('text-secondary');
+                    this.classList.add('text-white');
+                    this.style.fontWeight = '600';
+                });
+            });
         });
     </script>
 </body>
 </html>
-
-
-
-
-
